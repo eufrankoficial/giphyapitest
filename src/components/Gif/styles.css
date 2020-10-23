@@ -1,0 +1,29 @@
+.nextButton {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-top: 20px;
+}
+
+.nextButton button {
+	padding: 10px;
+	border-radius: 5px;
+	border: 0;
+	color: #fff;
+	background: #da552f;
+	font-size: 16px;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.nextButton button[disabled]:hover {
+	opacity: 0.5;
+	cursor: default;
+
+}
+
+
+.nextButton button:hover {
+	opacity: 0.7;
+
+}

@@ -1,0 +1,30 @@
+.actions {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-top: 20px;
+}
+
+.actions button {
+	margin: 10px 10px;
+	padding: 10px;
+	border-radius: 5px;
+	border: 0;
+	color: #fff;
+	background: #da552f;
+	font-size: 16px;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.actions button[disabled]:hover {
+	opacity: 0.5;
+	cursor: default;
+
+}
+
+
+.actions button:hover {
+	opacity: 0.7;
+
+}

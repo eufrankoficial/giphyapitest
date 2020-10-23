@@ -1,26 +1,27 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useContext } from 'react';
+import Routes  from './routes';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import Header from './components/Header';
+
+import { FavoriteProvider, FavoriteContext } from './contexts/FavoriteContext';
+
+import './styles.css';
+ 
+const App = () => {
+    
+    const contextFav = useContext(FavoriteContext);
+    console.log(contextFav);
+    return (
+    	<div className="App">
+			<FavoriteProvider>
+				<Header />
+
+				<Routes />
+			</FavoriteProvider>    
+	      
+	    </div>
+	);
+
 }
 
 export default App;
