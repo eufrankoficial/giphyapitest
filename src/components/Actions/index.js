@@ -20,7 +20,7 @@ const Button = (props) => {
 	}
 
 	function addToFavorites (gif) {
-		
+
 		const found = favorites.some(favorite => favorite.id === gif.id);
 		if(!found) {
 			favorites.push(gif);
@@ -34,7 +34,7 @@ const Button = (props) => {
 	return (
 
 		<div className="actions">
-			
+
 			<button onClick={copyUrlToClipBoard.bind(props.url)}>
 				Copy url <FontAwesomeIcon icon={faClone} />
 			</button>

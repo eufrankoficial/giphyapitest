@@ -1,16 +1,14 @@
 import React, { useRef, useCallback,  useState, useEffect } from 'react';
-
-import api from '../../services/api';
-
-
-
+import { trending } from '../../services/trending';
+import { search } from '../../services/search';
+import { updateGifList } from '../../services/gifList';
 import Gif from '../../components/Gif';
 import FavoriteListButton from '../../components/FavoriteListButton';
 
 import './styles.css';
 
 const Home = () => {
-	
+
 	const [gifList, setGifList] = useState([]);
 	const [offSetPage, setoffSetPage] = useState(10);
 	const [loading, setLoading] = useState(true);
@@ -21,9 +19,10 @@ const Home = () => {
 
 
 	const observer = useRef(); // undefined like default
-	
+
 	const lastGifEl = useCallback(node => {
 		if(loading) return;
+
 		if(observer.current) observer.current.disconnect();
 
 		observer.current = new IntersectionObserver(entries => {
@@ -45,10 +44,6 @@ const Home = () => {
 
 
 	async function loadGifs (nextPage, term = null) {
-		
-		try {
-			let baseUrl = '/trending';
-		
 			setLoading(true);
 
 			let params = {
@@ -56,41 +51,26 @@ const Home = () => {
 				offset: nextPage
 			};
 
+			var result;
 
-			if(term) {
-				baseUrl = '/search';
+			if(term !== null) {
 				setDidSearch(true);
 				params.q = term;
-			}
-
-			const { data: { data } } = await api.get(`${baseUrl}`, {
-				params: params
-			}).catch(error => {
-				setHasError(true);
-				return false;
-			});
-
-			if(!term || didSearch === true) {
-				setGifList(prevList => {
-					return [... new Set([...prevList, ...data.map(g => g)])];
-				});
+				result = await search(params);
 			} else {
-				setGifList(data);
+				result = await trending();
 			}
-			
+
+			result = updateGifList(result, gifList, didSearch, term)
+
+			setGifList(result);
 			setoffSetPage(nextPage);
 			setLoading(false);
 			setSearchText('Search');
-
-		} catch(error) {
-			setHasError(true);
-		}
 	}
 
-	function search () {
-		
+	function onClickSearch () {
 		setSearchText('Searching...');
-
 		const term = getTermToSearch();
 		loadGifs(offSetPage + 1, term);
 		setTerm(term);
@@ -98,33 +78,28 @@ const Home = () => {
 
 	function getTermToSearch () {
 		const term = document.getElementById('term').value;
-		
 		return term.trim() !== null ? term : null;
 	}
 
-
 	return (
 		<>
-
 			<div className="search">
 				<input type="text" id="term" placeholder="Search for something"/>
-				<button onClick={() => search()}>{searchText}</button>
+				<button onClick={() => onClickSearch()}>{searchText}</button>
 			</div>
 
 			<FavoriteListButton />
 
 			{!hasError ?
-				
+
 				<div className="gif-list">
 					{gifList.map((gif, index) =>  {
 						if(gifList.length === index + 1) {
-							return <article ref={lastGifEl} key={gif.id}>								
-								<Gif title={gif.title} url={gif.url} image={gif.images.original} gif={gif} detail={false} next={false} />
-							</article>
+							return <article ref={lastGifEl} key={gif.id}>
+								<Gif title={gif.title} url={gif.url} image={gif.images.original} gif={gif} detail={false} next={false} />							</article>
 						} else {
-							return <article key={gif.id}>								
-								<Gif title={gif.title} url={gif.url} image={gif.images.original} gif={gif} detail={false} next={false} />
-							</article>
+							return <article key={gif.id}>
+								<Gif title={gif.title} url={gif.url} image={gif.images.original} gif={gif} detail={false} next={false} />							</article>
 						}
 					})}
 

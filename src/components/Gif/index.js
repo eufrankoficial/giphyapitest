@@ -17,12 +17,12 @@ const Gif = (props) => {
 	let link;
 	if(props.next.data !== undefined) {
 		link = <Link to={`/gif/${props.next.data.id}`}><button>Next</button></Link>
-	}	
+	}
 
 	return (
 		<div className="gif-info">
 			<h1>{props.title}</h1>
-			
+
 			<div className="nextButton">
 				{link}
 			</div>
